@@ -3,27 +3,33 @@ const { Gio, Gtk, Meta, St } = imports.gi;
 const { extensionUtils } = imports.misc;
 
 let icon, button, fixed;
+let fixed_gicon, unfixed_gicon;
 
 function enable_fix() {
   Meta.disable_unredirect_for_screen(global.display);
-  icon.set_icon_name("fixed-fullscreen-tearing-symbolic");
+  icon.set_gicon("fixed_gicon");
   fixed = true;
 }
 
 function disable_fix() {
   Meta.enable_unredirect_for_screen(global.display);
-  icon.set_icon_name("unfixed-fullscreen-tearing-symbolic");
+  icon.set_gicon("unfixed_gicon");
   fixed = false;
 }
 
+function load_icon(name) {
+  const current_extension = extensionUtils.getCurrentExtension();
+  const f = Gio.File.new_for_path(
+    `${current_extension.path}/icons/${name}.svg`);
+  return Gio.FileIcon.new(f);
+}
+
 function init() {
+    fixed_gicon = load_icon("fixed-fullscreen-tearing-symbolic");
+    unfixed_gicon = load_icon("unfixed-fullscreen-tearing-symbolic");
 }
 
 function enable() {
-  const current_extension = extensionUtils.getCurrentExtension();
-  const icon_theme = Gtk.IconTheme.get_default();
-  icon_theme.append_search_path(current_extension.path + "/icons");
-
   icon = new St.Icon({ style_class: "system-status-icon" });
 
   button = new St.Bin({
