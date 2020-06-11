@@ -5,13 +5,13 @@ const { extensionUtils } = imports.misc;
 let icon, button, fixed;
 
 function enable_fix() {
-  Meta.disable_unredirect_for_screen(global.screen);
+  Meta.disable_unredirect_for_screen(global.display);
   icon.set_icon_name("fixed-fullscreen-tearing-symbolic");
   fixed = true;
 }
 
 function disable_fix() {
-  Meta.enable_unredirect_for_screen(global.screen);
+  Meta.enable_unredirect_for_screen(global.display);
   icon.set_icon_name("unfixed-fullscreen-tearing-symbolic");
   fixed = false;
 }
