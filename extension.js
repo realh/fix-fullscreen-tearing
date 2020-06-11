@@ -17,6 +17,9 @@ function disable_fix() {
 }
 
 function init() {
+}
+
+function enable() {
   const current_extension = extensionUtils.getCurrentExtension();
   const icon_theme = Gtk.IconTheme.get_default();
   icon_theme.append_search_path(current_extension.path + "/icons");
@@ -44,9 +47,7 @@ function init() {
       }
     }
   );
-}
 
-function enable() {
   main.panel._rightBox.insert_child_at_index(button, 0);
   enable_fix();
 }
@@ -54,4 +55,5 @@ function enable() {
 function disable() {
   main.panel._rightBox.remove_child(button);
   disable_fix();
+  button = null;
 }
