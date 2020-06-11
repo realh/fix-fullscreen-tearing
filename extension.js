@@ -7,13 +7,13 @@ let fixed_gicon, unfixed_gicon;
 
 function enable_fix() {
   Meta.disable_unredirect_for_display(global.display);
-  icon.set_gicon("fixed_gicon");
+  icon.set_gicon(fixed_gicon);
   fixed = true;
 }
 
 function disable_fix() {
   Meta.enable_unredirect_for_display(global.display);
-  icon.set_gicon("unfixed_gicon");
+  icon.set_gicon(unfixed_gicon);
   fixed = false;
 }
 
