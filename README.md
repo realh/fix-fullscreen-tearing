@@ -2,8 +2,8 @@
 
 This is a fork of
 [Tom Clark's extension](https://extensions.gnome.org/extension/1445/fix-fullscreen-tearing/)
-to make it work with newer versions of
-gnome-shell. The following paragraphs are his words.
+to make it work with newer versions of gnome-shell. The following paragraphs
+are his words.
 
 GNOME Shell has a nice feature called "unredirection", which sometimes disables
 compositing for fullscreen windows. I think this is a heuristic to reduce
