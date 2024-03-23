@@ -1,63 +1,65 @@
-const { main } = imports.ui;
-const { Gio, Gtk, Meta, St } = imports.gi;
-const { extensionUtils } = imports.misc;
+import {panel} from 'resource:///org/gnome/shell/ui/main.js';
+import Gio from 'gi://Gio';
+import Meta from 'gi://Meta';
+import St from 'gi://St';
+import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-let icon, button, fixed;
-let fixed_gicon, unfixed_gicon;
-
-function enable_fix() {
-  Meta.disable_unredirect_for_display(global.display);
-  icon.set_gicon(fixed_gicon);
-  fixed = true;
-}
-
-function disable_fix() {
-  Meta.enable_unredirect_for_display(global.display);
-  icon.set_gicon(unfixed_gicon);
-  fixed = false;
-}
-
-function load_icon(name) {
-  const current_extension = extensionUtils.getCurrentExtension();
-  const f = Gio.File.new_for_path(
-    `${current_extension.path}/icons/${name}.svg`);
-  return Gio.FileIcon.new(f);
-}
-
-function init() {
-    fixed_gicon = load_icon("fixed-fullscreen-tearing-symbolic");
-    unfixed_gicon = load_icon("unfixed-fullscreen-tearing-symbolic");
-}
-
-function enable() {
-  icon = new St.Icon({ style_class: "system-status-icon" });
-
-  button = new St.Bin({
-    style_class: "panel-button",
-    reactive: true,
-    can_focus: true,
-    track_hover: true
-  });
-
-  button.set_child(icon);
-
-  button.connect(
-    "button-press-event",
-    function() {
-      if (fixed) {
-        disable_fix();
-      } else {
-        enable_fix();
-      }
+export default class FixFullscreenTearingExtension extends Extension {
+    constructor(metadata) {
+        super(metadata);
+        this.fixed_gicon = this.load_icon("fixed-fullscreen-tearing-symbolic");
+        this.unfixed_gicon =
+            this.load_icon("unfixed-fullscreen-tearing-symbolic");
     }
-  );
 
-  main.panel._rightBox.insert_child_at_index(button, 0);
-  enable_fix();
-}
+    load_icon(name) {
+        const f = Gio.File.new_for_path(
+            `${this.path}/icons/${name}.svg`);
+        return Gio.FileIcon.new(f);
+    }
 
-function disable() {
-  main.panel._rightBox.remove_child(button);
-  disable_fix();
-  button = null;
+    enable_fix() {
+        Meta.disable_unredirect_for_display(global.display);
+        this.icon.set_gicon(this.fixed_gicon);
+        this.fixed = true;
+    }
+
+    disable_fix() {
+        Meta.enable_unredirect_for_display(global.display);
+        this.icon.set_gicon(this.unfixed_gicon);
+        this.fixed = false;
+    }
+
+    enable() {
+        this.icon = new St.Icon({ style_class: "system-status-icon" });
+
+        this.button = new St.Bin({
+            style_class: "panel-button",
+            reactive: true,
+            can_focus: true,
+            track_hover: true
+        });
+
+        this.button.set_child(this.icon);
+
+        this.button.connect(
+            "button-press-event",
+            () => {
+                if (this.fixed) {
+                    this.disable_fix();
+                } else {
+                    this.enable_fix();
+                }
+            }
+        );
+
+        panel._rightBox.insert_child_at_index(this.button, 0);
+        this.enable_fix();
+    }
+
+    disable() {
+        panel._rightBox.remove_child(this.button);
+        this.disable_fix();
+        this.button = null;
+    }
 }
