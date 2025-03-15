@@ -1,8 +1,8 @@
 {
   "description": "Disable unredirection. Turning off this optimization can fix tearing for some fullscreen applications, like HTML5 video in Firefox.", 
   "name": "Fix Fullscreen Tearing", 
-  "shell-version": [ "45", "46" ], 
+  "shell-version": [ "45", "46", "47" ], 
   "url": "", 
   "uuid": "fix-fullscreen-tearing@realh", 
-  "version": 3
+  "version": 4
 }
