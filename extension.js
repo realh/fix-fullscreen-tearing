@@ -19,13 +19,27 @@ export default class FixFullscreenTearingExtension extends Extension {
     }
 
     enable_fix() {
-        Meta.disable_unredirect_for_display(global.display);
+        if ("disable_unredirect_for_display" in Meta) {
+            // Old way
+            Meta.disable_unredirect_for_display(global.display);
+        } else {
+            // GNOME 48+
+            const comp = global.display.get_compositor();
+            comp.disable_unredirect();
+        }
         this.icon.set_gicon(this.fixed_gicon);
         this.fixed = true;
     }
 
     disable_fix() {
-        Meta.enable_unredirect_for_display(global.display);
+        if ("disable_unredirect_for_display" in Meta) {
+            // Old way
+            Meta.enable_unredirect_for_display(global.display);
+        } else {
+            // GNOME 48+
+            const comp = global.display.get_compositor();
+            comp.enable_unredirect();
+        }
         this.icon.set_gicon(this.unfixed_gicon);
         this.fixed = false;
     }
